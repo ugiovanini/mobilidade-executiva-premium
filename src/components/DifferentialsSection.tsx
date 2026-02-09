@@ -3,11 +3,10 @@ import { Check } from "lucide-react";
 
 const differentials = [
   "Veículos categoria Black (sedan executivo de luxo)",
-  "Motoristas com treinamento executivo e etiqueta",
-  "Pontualidade garantida — compromisso inegociável",
-  "Rastreamento em tempo real e seguro completo",
+  "Motoristas treinado executivo",
+  "Pontualidade garantida, compromisso inegociável.",
   "Atendimento 24h para executivos e empresas",
-  "Privacidade total — sigilo absoluto nas corridas",
+  "Privacidade total, sigilo absoluto nas corridas",
   "Conforto premium: climatização, água, Wi-Fi",
   "Flexibilidade para demandas corporativas recorrentes",
 ];
