@@ -12,7 +12,7 @@ const services = [
     icon: Clock,
     title: "Agenda Recorrente",
     description:
-      "Atendimento dedicado para executivos com rotas fixas diárias ou semanais. Sem surpresas, sem atrasos.",
+      "Atendimento dedicado para executivos com rotas fixas diárias ou semanais. Sem surpresas, sem atrasos, mas ágil!",
   },
   {
     icon: Shield,
