@@ -1,9 +1,14 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
+import QuoteRequestDialog from "./QuoteRequestDialog";
 
 const HeroSection = () => {
+  const [quoteOpen, setQuoteOpen] = useState(false);
   return (
+    <>
+    <QuoteRequestDialog open={quoteOpen} onOpenChange={setQuoteOpen} />
     <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
@@ -39,12 +44,12 @@ const HeroSection = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="#contato"
+            <button
+              onClick={() => setQuoteOpen(true)}
               className="bg-gold-gradient text-primary-foreground px-10 py-4 rounded-sm text-base font-semibold font-sans tracking-wide hover:opacity-90 transition-opacity"
             >
               Solicitar Agora
-            </a>
+            </button>
             <a
               href="#servicos"
               className="border border-gold text-foreground px-10 py-4 rounded-sm text-base font-sans tracking-wide hover:bg-primary/10 transition-colors"
@@ -64,6 +69,7 @@ const HeroSection = () => {
         <ChevronDown className="text-primary" size={28} />
       </motion.div>
     </section>
+    </>
   );
 };
 

@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
+import QuoteRequestDialog from "./QuoteRequestDialog";
 
 const differentials = [
   "Veículos categoria Black (sedan executivo de luxo)",
@@ -12,7 +14,10 @@ const differentials = [
 ];
 
 const DifferentialsSection = () => {
+  const [quoteOpen, setQuoteOpen] = useState(false);
   return (
+    <>
+    <QuoteRequestDialog open={quoteOpen} onOpenChange={setQuoteOpen} />
     <section id="diferenciais" className="py-24 md:py-32 bg-background">
       <div className="container mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -36,12 +41,12 @@ const DifferentialsSection = () => {
               experiência em mobilidade executiva de São Paulo.
             </p>
             <div className="divider-gold w-24 mb-8" />
-            <a
-              href="#contato"
+            <button
+              onClick={() => setQuoteOpen(true)}
               className="bg-gold-gradient text-primary-foreground px-8 py-3.5 rounded-sm text-sm font-semibold font-sans tracking-wide hover:opacity-90 transition-opacity inline-block"
             >
               Solicitar Orçamento
-            </a>
+            </button>
           </motion.div>
 
           <motion.div
@@ -70,6 +75,7 @@ const DifferentialsSection = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 
