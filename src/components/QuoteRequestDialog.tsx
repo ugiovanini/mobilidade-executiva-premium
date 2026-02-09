@@ -81,7 +81,7 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
             <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Origem</legend>
             <div className="space-y-1.5">
               <Label className="text-foreground text-sm">Rua *</Label>
-              <Input className={inputClass} value={form.origemRua} onChange={(e) => update("origemRua", e.target.value)} maxLength={60} placeholder="Nome da rua" />
+              <Input className={inputClass} value={form.origemRua} onChange={(e) => update("origemRua", e.target.value)} maxLength={60} placeholder="Nome da rua de origem/partida" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
@@ -104,7 +104,7 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
             <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Destino</legend>
             <div className="space-y-1.5">
               <Label className="text-foreground text-sm">Rua *</Label>
-              <Input className={inputClass} value={form.destinoRua} onChange={(e) => update("destinoRua", e.target.value)} maxLength={60} placeholder="Nome da rua" />
+              <Input className={inputClass} value={form.destinoRua} onChange={(e) => update("destinoRua", e.target.value)} maxLength={60} placeholder="Nome da rua de destino/chegada" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
