@@ -68,8 +68,16 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
     ].filter(Boolean).join("\n");
 
     const phone = "5511983544301";
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-    window.open(url, "_blank");
+    const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+
+    // Use link click to avoid Cross-Origin-Opener-Policy blocking in Safari/iframes
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 
     setForm({ nome: "", origemRua: "", origemNumero: "", origemComplemento: "", origemCep: "", destinoRua: "", destinoNumero: "", destinoComplemento: "", destinoCep: "", referencia: "", horario: "" });
     onOpenChange(false);
