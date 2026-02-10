@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -40,6 +40,7 @@ const generateTimeOptions = () => {
 };
 
 const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => {
+  const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
   const [form, setForm] = useState({
     nome: "",
     origemRua: "",
@@ -97,11 +98,18 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
     const phone = "5511983544301";
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
 
-    // Try window.open first; if blocked (iframe/popup blocker), fallback to top-level navigation
-    const w = window.open(url, "_blank", "noopener,noreferrer");
-    if (!w) {
-      // Fallback: navigate the top-level window (escapes iframe)
-      (window.top || window).location.href = url;
+    // Try opening WhatsApp - multiple strategies for iframe/Safari compatibility
+    try {
+      const w = window.open(url, "_blank", "noopener,noreferrer");
+      if (!w) throw new Error("blocked");
+    } catch {
+      // If window.open fails (iframe sandbox), show a clickable link instead
+      setWhatsappUrl(url);
+      toast({
+        title: "Quase lá!",
+        description: "Clique no link verde abaixo para abrir o WhatsApp.",
+      });
+      return; // Don't close dialog yet
     }
 
     setForm({ nome: "", origemRua: "", origemNumero: "", origemComplemento: "", origemCep: "", destinoRua: "", destinoNumero: "", destinoComplemento: "", destinoCep: "", referencia: "", diaViagem: "", horarioChegada: "" });
@@ -210,6 +218,17 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
               </Select>
             </div>
           </div>
+
+          {whatsappUrl && (
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full text-center bg-green-600 text-white py-3.5 rounded-sm text-sm font-semibold font-sans tracking-wide hover:bg-green-700 transition-colors"
+            >
+              ✅ Abrir WhatsApp
+            </a>
+          )}
 
           <button type="submit" className="w-full bg-gold-gradient text-primary-foreground py-3.5 rounded-sm text-sm font-semibold font-sans tracking-wide hover:opacity-90 transition-opacity">
             Enviar Solicitação
