@@ -97,8 +97,12 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
     const phone = "5511983544301";
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
 
-    // Use window.location.href to navigate directly, avoiding COOP blocking in Safari/iframes
-    window.location.href = url;
+    // Try window.open first; if blocked (iframe/popup blocker), fallback to top-level navigation
+    const w = window.open(url, "_blank", "noopener,noreferrer");
+    if (!w) {
+      // Fallback: navigate the top-level window (escapes iframe)
+      (window.top || window).location.href = url;
+    }
 
     setForm({ nome: "", origemRua: "", origemNumero: "", origemComplemento: "", origemCep: "", destinoRua: "", destinoNumero: "", destinoComplemento: "", destinoCep: "", referencia: "", diaViagem: "", horarioChegada: "" });
     onOpenChange(false);
