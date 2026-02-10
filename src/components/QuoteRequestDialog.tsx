@@ -97,56 +97,56 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-5 mt-2" autoComplete="off">
+        <form onSubmit={handleSubmit} className="space-y-5 mt-2">
           {/* Nome */}
           <div className="space-y-1.5">
             <Label htmlFor="quote_nome" className="text-foreground text-sm font-medium">Nome completo *</Label>
             <Input id="quote_nome" className={inputClass} value={form.nome} onChange={(e) => update("nome", e.target.value)} maxLength={100} placeholder="Seu nome completo" name="quote_nome" autoComplete="name" />
           </div>
 
-          {/* Origem */}
+          {/* Origem = shipping */}
           <fieldset className="space-y-3">
             <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Origem</legend>
             <div className="space-y-1.5">
               <Label htmlFor="quote_origem_rua" className="text-foreground text-sm">Rua *</Label>
-              <Input id="quote_origem_rua" className={inputClass} value={form.origemRua} onChange={(e) => update("origemRua", e.target.value)} maxLength={60} placeholder="Nome da rua de origem/partida" name="quote_origem_rua" autoComplete="off" />
+              <Input id="quote_origem_rua" className={inputClass} value={form.origemRua} onChange={(e) => update("origemRua", e.target.value)} maxLength={60} placeholder="Nome da rua de origem/partida" name="quote_origem_rua" autoComplete="shipping address-line1" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="quote_origem_numero" className="text-foreground text-sm">Número *</Label>
-                <Input id="quote_origem_numero" className={inputClass} value={form.origemNumero} onChange={(e) => update("origemNumero", e.target.value.replace(/\D/g, "").slice(0, 6))} maxLength={6} placeholder="Nº" inputMode="numeric" name="quote_origem_numero" autoComplete="off" />
+                <Input id="quote_origem_numero" className={inputClass} value={form.origemNumero} onChange={(e) => update("origemNumero", e.target.value.replace(/\D/g, "").slice(0, 6))} maxLength={6} placeholder="Nº" inputMode="numeric" name="quote_origem_numero" autoComplete="shipping address-line2" />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="quote_origem_complemento" className="text-foreground text-sm">Complemento</Label>
-                <Input id="quote_origem_complemento" className={inputClass} value={form.origemComplemento} onChange={(e) => update("origemComplemento", e.target.value)} maxLength={20} placeholder="Apto, sala..." name="quote_origem_complemento" autoComplete="off" />
+                <Input id="quote_origem_complemento" className={inputClass} value={form.origemComplemento} onChange={(e) => update("origemComplemento", e.target.value)} maxLength={20} placeholder="Apto, sala..." name="quote_origem_complemento" autoComplete="shipping address-line3" />
               </div>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="quote_origem_cep" className="text-foreground text-sm">CEP *</Label>
-              <Input id="quote_origem_cep" className={inputClass} value={form.origemCep} onChange={(e) => update("origemCep", formatCep(e.target.value))} maxLength={9} placeholder="99999-999" inputMode="numeric" name="quote_origem_cep" autoComplete="off" />
+              <Input id="quote_origem_cep" className={inputClass} value={form.origemCep} onChange={(e) => update("origemCep", formatCep(e.target.value))} maxLength={9} placeholder="99999-999" inputMode="numeric" name="quote_origem_cep" autoComplete="shipping postal-code" />
             </div>
           </fieldset>
 
-          {/* Destino */}
+          {/* Destino = billing */}
           <fieldset className="space-y-3">
             <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Destino</legend>
             <div className="space-y-1.5">
               <Label htmlFor="quote_destino_rua" className="text-foreground text-sm">Rua *</Label>
-              <Input id="quote_destino_rua" className={inputClass} value={form.destinoRua} onChange={(e) => update("destinoRua", e.target.value)} maxLength={60} placeholder="Nome da rua de destino/chegada" name="quote_destino_rua" autoComplete="off" />
+              <Input id="quote_destino_rua" className={inputClass} value={form.destinoRua} onChange={(e) => update("destinoRua", e.target.value)} maxLength={60} placeholder="Nome da rua de destino/chegada" name="quote_destino_rua" autoComplete="billing address-line1" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="quote_destino_numero" className="text-foreground text-sm">Número *</Label>
-                <Input id="quote_destino_numero" className={inputClass} value={form.destinoNumero} onChange={(e) => update("destinoNumero", e.target.value.replace(/\D/g, "").slice(0, 6))} maxLength={6} placeholder="Nº" inputMode="numeric" name="quote_destino_numero" autoComplete="off" />
+                <Input id="quote_destino_numero" className={inputClass} value={form.destinoNumero} onChange={(e) => update("destinoNumero", e.target.value.replace(/\D/g, "").slice(0, 6))} maxLength={6} placeholder="Nº" inputMode="numeric" name="quote_destino_numero" autoComplete="billing address-line2" />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="quote_destino_complemento" className="text-foreground text-sm">Complemento</Label>
-                <Input id="quote_destino_complemento" className={inputClass} value={form.destinoComplemento} onChange={(e) => update("destinoComplemento", e.target.value)} maxLength={20} placeholder="Apto, sala..." name="quote_destino_complemento" autoComplete="off" />
+                <Input id="quote_destino_complemento" className={inputClass} value={form.destinoComplemento} onChange={(e) => update("destinoComplemento", e.target.value)} maxLength={20} placeholder="Apto, sala..." name="quote_destino_complemento" autoComplete="billing address-line3" />
               </div>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="quote_destino_cep" className="text-foreground text-sm">CEP *</Label>
-              <Input id="quote_destino_cep" className={inputClass} value={form.destinoCep} onChange={(e) => update("destinoCep", formatCep(e.target.value))} maxLength={9} placeholder="99999-999" inputMode="numeric" name="quote_destino_cep" autoComplete="off" />
+              <Input id="quote_destino_cep" className={inputClass} value={form.destinoCep} onChange={(e) => update("destinoCep", formatCep(e.target.value))} maxLength={9} placeholder="99999-999" inputMode="numeric" name="quote_destino_cep" autoComplete="billing postal-code" />
             </div>
           </fieldset>
 
