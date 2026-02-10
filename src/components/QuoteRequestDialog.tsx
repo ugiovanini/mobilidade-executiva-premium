@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
+import { format, addDays } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface QuoteRequestDialogProps {
   open: boolean;
@@ -15,6 +17,26 @@ const formatCep = (value: string) => {
   const digits = value.replace(/\D/g, "").slice(0, 8);
   if (digits.length > 5) return `${digits.slice(0, 5)}-${digits.slice(5)}`;
   return digits;
+};
+
+const generateDayOptions = () => {
+  const options: { value: string; label: string }[] = [];
+  for (let i = 0; i < 7; i++) {
+    const date = addDays(new Date(), i);
+    const label = i === 0 ? "Hoje" : i === 1 ? "Amanhã" : format(date, "EEEE", { locale: ptBR });
+    options.push({ value: format(date, "dd/MM/yyyy"), label: `${label} (${format(date, "dd/MM")})` });
+  }
+  return options;
+};
+
+const generateTimeOptions = () => {
+  const options: string[] = [];
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += 15) {
+      options.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+    }
+  }
+  return options;
 };
 
 const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => {
@@ -29,8 +51,12 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
     destinoComplemento: "",
     destinoCep: "",
     referencia: "",
-    horario: "",
+    diaViagem: "",
+    horarioChegada: "",
   });
+
+  const dayOptions = generateDayOptions();
+  const timeOptions = generateTimeOptions();
 
   const update = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -39,7 +65,7 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.nome.trim() || !form.origemRua.trim() || !form.origemNumero.trim() || !form.origemCep.trim() || !form.destinoRua.trim() || !form.destinoNumero.trim() || !form.destinoCep.trim() || !form.horario.trim()) {
+    if (!form.nome.trim() || !form.origemRua.trim() || !form.origemNumero.trim() || !form.origemCep.trim() || !form.destinoRua.trim() || !form.destinoNumero.trim() || !form.destinoCep.trim() || !form.diaViagem || !form.horarioChegada) {
       toast({ title: "Campos obrigatórios", description: "Preencha todos os campos obrigatórios.", variant: "destructive" });
       return;
     }
@@ -64,11 +90,12 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
       `CEP: ${form.destinoCep}`,
       form.referencia ? `\n*Referência:* ${form.referencia}` : "",
       ``,
-      `*Horário desejado:* ${form.horario}`,
+      `*Dia da viagem:* ${form.diaViagem}`,
+      `*Chegue às:* ${form.horarioChegada}`,
     ].filter(Boolean).join("\n");
 
     const phone = "5511983544301";
-    const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
 
     // Use link click to avoid Cross-Origin-Opener-Policy blocking in Safari/iframes
     const a = document.createElement("a");
@@ -79,7 +106,7 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
     a.click();
     document.body.removeChild(a);
 
-    setForm({ nome: "", origemRua: "", origemNumero: "", origemComplemento: "", origemCep: "", destinoRua: "", destinoNumero: "", destinoComplemento: "", destinoCep: "", referencia: "", horario: "" });
+    setForm({ nome: "", origemRua: "", origemNumero: "", origemComplemento: "", origemCep: "", destinoRua: "", destinoNumero: "", destinoComplemento: "", destinoCep: "", referencia: "", diaViagem: "", horarioChegada: "" });
     onOpenChange(false);
   };
 
@@ -156,10 +183,34 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
             <Textarea className={`${inputClass} min-h-[60px] resize-none`} value={form.referencia} onChange={(e) => update("referencia", e.target.value)} maxLength={200} placeholder="Ponto de referência, observações..." />
           </div>
 
-          {/* Horário */}
-          <div className="space-y-1.5">
-            <Label className="text-foreground text-sm">Horário desejado *</Label>
-            <Input type="time" className={inputClass} value={form.horario} onChange={(e) => update("horario", e.target.value)} />
+          {/* Dia da viagem + Chegue às */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-foreground text-sm">Dia da viagem *</Label>
+              <Select value={form.diaViagem} onValueChange={(v) => update("diaViagem", v)}>
+                <SelectTrigger className={inputClass}>
+                  <SelectValue placeholder="Selecione o dia" />
+                </SelectTrigger>
+                <SelectContent>
+                  {dayOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-foreground text-sm">Chegue às *</Label>
+              <Select value={form.horarioChegada} onValueChange={(v) => update("horarioChegada", v)}>
+                <SelectTrigger className={inputClass}>
+                  <SelectValue placeholder="Horário" />
+                </SelectTrigger>
+                <SelectContent>
+                  {timeOptions.map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <button type="submit" className="w-full bg-gold-gradient text-primary-foreground py-3.5 rounded-sm text-sm font-semibold font-sans tracking-wide hover:opacity-90 transition-opacity">
