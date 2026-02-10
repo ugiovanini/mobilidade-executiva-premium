@@ -191,7 +191,7 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
             <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Origem/Partida</legend>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="quote_origem_cep" className="text-foreground text-sm font-medium">CEP * <span className="text-xs text-muted-foreground font-normal">(preenche automaticamente)</span></Label>
+                <Label htmlFor="quote_origem_cep" className="text-foreground text-sm font-medium">CEP * <span className="text-xs text-muted-foreground font-normal">(busca automática)</span></Label>
                 <Input id="quote_origem_cep" className={`${inputClass} border-primary/50 ring-1 ring-primary/20`} value={form.origemCep} onChange={(e) => handleCepChange("origemCep", "origemRua", "origemBairro", "origemCidade", "origemEstado", e.target.value)} maxLength={9} placeholder="Digite o CEP" inputMode="numeric" name="quote_origem_cep" autoComplete="shipping postal-code" />
               </div>
               <div className="space-y-1.5">
@@ -230,7 +230,7 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
             <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Destino/Chegada</legend>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="dest_search_cep" className="text-foreground text-sm font-medium">CEP * <span className="text-xs text-muted-foreground font-normal">(preenche automaticamente)</span></Label>
+                <Label htmlFor="dest_search_cep" className="text-foreground text-sm font-medium">CEP * <span className="text-xs text-muted-foreground font-normal">(busca automática)</span></Label>
                 <Input id="dest_search_cep" className={`${inputClass} border-primary/50 ring-1 ring-primary/20`} value={form.destinoCep} onChange={(e) => handleCepChange("destinoCep", "destinoRua", "destinoBairro", "destinoCidade", "destinoEstado", e.target.value)} maxLength={9} placeholder="Digite o CEP" inputMode="numeric" name="dest_search_cep" autoComplete="off" />
               </div>
               <div className="space-y-1.5">
