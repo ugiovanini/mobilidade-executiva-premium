@@ -39,8 +39,8 @@ const HeroSection = () => {
           </h1>
 
           <p className="font-sans text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-            Excelência, conforto e pontualidade para executivos C-level e clientes 
-            que exigem o mais alto padrão em transporte na capital paulista.
+             Excelência, conforto e pontualidade para executivos e clientes 
+             que exigem o mais alto padrão em transporte na capital paulista.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
