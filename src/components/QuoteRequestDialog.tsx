@@ -106,7 +106,7 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
 
           {/* Origem = shipping */}
           <fieldset className="space-y-3">
-            <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Origem</legend>
+            <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Origem/Partida</legend>
             <div className="space-y-1.5">
               <Label htmlFor="quote_origem_rua" className="text-foreground text-sm">Rua *</Label>
               <Input id="quote_origem_rua" className={inputClass} value={form.origemRua} onChange={(e) => update("origemRua", e.target.value)} maxLength={60} placeholder="Nome da rua de origem/partida" name="quote_origem_rua" autoComplete="shipping address-line1" />
@@ -129,24 +129,24 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
 
           {/* Destino = billing */}
           <fieldset className="space-y-3">
-            <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Destino</legend>
+            <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Destino/Chegada</legend>
             <div className="space-y-1.5">
               <Label htmlFor="quote_destino_rua" className="text-foreground text-sm">Rua *</Label>
-              <Input id="quote_destino_rua" className={inputClass} value={form.destinoRua} onChange={(e) => update("destinoRua", e.target.value)} maxLength={60} placeholder="Nome da rua de destino/chegada" name="quote_destino_rua" autoComplete="billing address-line1" />
+              <Input id="quote_destino_rua" className={inputClass} value={form.destinoRua} onChange={(e) => update("destinoRua", e.target.value)} maxLength={60} placeholder="Nome da rua de destino/chegada" name="dest_street_xz" autoComplete="nope-street" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="quote_destino_numero" className="text-foreground text-sm">Número *</Label>
-                <Input id="quote_destino_numero" className={inputClass} value={form.destinoNumero} onChange={(e) => update("destinoNumero", e.target.value.replace(/\D/g, "").slice(0, 6))} maxLength={6} placeholder="Nº" inputMode="numeric" name="quote_destino_numero" autoComplete="billing address-line2" />
+                <Input id="quote_destino_numero" className={inputClass} value={form.destinoNumero} onChange={(e) => update("destinoNumero", e.target.value.replace(/\D/g, "").slice(0, 6))} maxLength={6} placeholder="Nº" inputMode="numeric" name="dest_num_xz" autoComplete="nope-num" />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="quote_destino_complemento" className="text-foreground text-sm">Complemento</Label>
-                <Input id="quote_destino_complemento" className={inputClass} value={form.destinoComplemento} onChange={(e) => update("destinoComplemento", e.target.value)} maxLength={20} placeholder="Apto, sala..." name="quote_destino_complemento" autoComplete="billing address-line3" />
+                <Input id="quote_destino_complemento" className={inputClass} value={form.destinoComplemento} onChange={(e) => update("destinoComplemento", e.target.value)} maxLength={20} placeholder="Apto, sala..." name="dest_comp_xz" autoComplete="nope-comp" />
               </div>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="quote_destino_cep" className="text-foreground text-sm">CEP *</Label>
-              <Input id="quote_destino_cep" className={inputClass} value={form.destinoCep} onChange={(e) => update("destinoCep", formatCep(e.target.value))} maxLength={9} placeholder="99999-999" inputMode="numeric" name="quote_destino_cep" autoComplete="billing postal-code" />
+              <Input id="quote_destino_cep" className={inputClass} value={form.destinoCep} onChange={(e) => update("destinoCep", formatCep(e.target.value))} maxLength={9} placeholder="99999-999" inputMode="numeric" name="dest_cep_xz" autoComplete="nope-cep" />
             </div>
           </fieldset>
 
