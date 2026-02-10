@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +17,19 @@ const formatCep = (value: string) => {
   const digits = value.replace(/\D/g, "").slice(0, 8);
   if (digits.length > 5) return `${digits.slice(0, 5)}-${digits.slice(5)}`;
   return digits;
+};
+
+const fetchAddressByCep = async (cep: string): Promise<{ logradouro?: string; complemento?: string } | null> => {
+  const digits = cep.replace(/\D/g, "");
+  if (digits.length !== 8) return null;
+  try {
+    const res = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
+    const data = await res.json();
+    if (data.erro) return null;
+    return { logradouro: data.logradouro || "", complemento: data.complemento || "" };
+  } catch {
+    return null;
+  }
 };
 
 const generateDayOptions = () => {
@@ -62,6 +75,19 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
   const update = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
+
+  const handleCepChange = useCallback(async (cepField: "origemCep" | "destinoCep", ruaField: "origemRua" | "destinoRua", value: string) => {
+    const formatted = formatCep(value);
+    update(cepField, formatted);
+    const digits = formatted.replace(/\D/g, "");
+    if (digits.length === 8) {
+      const addr = await fetchAddressByCep(digits);
+      if (addr?.logradouro) {
+        setForm((prev) => ({ ...prev, [ruaField]: addr.logradouro! }));
+        toast({ title: "Endereço encontrado", description: addr.logradouro });
+      }
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,7 +182,7 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="quote_origem_cep" className="text-foreground text-sm">CEP *</Label>
-              <Input id="quote_origem_cep" className={inputClass} value={form.origemCep} onChange={(e) => update("origemCep", formatCep(e.target.value))} maxLength={9} placeholder="99999-999" inputMode="numeric" name="quote_origem_cep" autoComplete="shipping postal-code" />
+              <Input id="quote_origem_cep" className={inputClass} value={form.origemCep} onChange={(e) => handleCepChange("origemCep", "origemRua", e.target.value)} maxLength={9} placeholder="99999-999" inputMode="numeric" name="quote_origem_cep" autoComplete="shipping postal-code" />
             </div>
           </fieldset>
 
@@ -179,7 +205,7 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="dest_search_cep" className="text-foreground text-sm">CEP *</Label>
-              <Input id="dest_search_cep" className={inputClass} value={form.destinoCep} onChange={(e) => update("destinoCep", formatCep(e.target.value))} maxLength={9} placeholder="99999-999" inputMode="numeric" name="dest_search_cep" autoComplete="off" />
+              <Input id="dest_search_cep" className={inputClass} value={form.destinoCep} onChange={(e) => handleCepChange("destinoCep", "destinoRua", e.target.value)} maxLength={9} placeholder="99999-999" inputMode="numeric" name="dest_search_cep" autoComplete="off" />
             </div>
           </fieldset>
 
