@@ -19,14 +19,14 @@ const formatCep = (value: string) => {
   return digits;
 };
 
-const fetchAddressByCep = async (cep: string): Promise<{ logradouro?: string; complemento?: string; bairro?: string } | null> => {
+const fetchAddressByCep = async (cep: string): Promise<{ logradouro?: string; complemento?: string; bairro?: string; localidade?: string; uf?: string } | null> => {
   const digits = cep.replace(/\D/g, "");
   if (digits.length !== 8) return null;
   try {
     const res = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
     const data = await res.json();
     if (data.erro) return null;
-    return { logradouro: data.logradouro || "", complemento: data.complemento || "", bairro: data.bairro || "" };
+    return { logradouro: data.logradouro || "", complemento: data.complemento || "", bairro: data.bairro || "", localidade: data.localidade || "", uf: data.uf || "" };
   } catch {
     return null;
   }
@@ -61,11 +61,15 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
     origemComplemento: "",
     origemCep: "",
     origemBairro: "",
+    origemCidade: "",
+    origemEstado: "",
     destinoRua: "",
     destinoNumero: "",
     destinoComplemento: "",
     destinoCep: "",
     destinoBairro: "",
+    destinoCidade: "",
+    destinoEstado: "",
     referencia: "",
     diaViagem: "",
     horarioChegada: "",
@@ -78,14 +82,27 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleCepChange = useCallback(async (cepField: "origemCep" | "destinoCep", ruaField: "origemRua" | "destinoRua", bairroField: "origemBairro" | "destinoBairro", value: string) => {
+  const handleCepChange = useCallback(async (
+    cepField: "origemCep" | "destinoCep",
+    ruaField: "origemRua" | "destinoRua",
+    bairroField: "origemBairro" | "destinoBairro",
+    cidadeField: "origemCidade" | "destinoCidade",
+    estadoField: "origemEstado" | "destinoEstado",
+    value: string
+  ) => {
     const formatted = formatCep(value);
     update(cepField, formatted);
     const digits = formatted.replace(/\D/g, "");
     if (digits.length === 8) {
       const addr = await fetchAddressByCep(digits);
       if (addr?.logradouro) {
-        setForm((prev) => ({ ...prev, [ruaField]: addr.logradouro!, [bairroField]: addr.bairro || "" }));
+        setForm((prev) => ({
+          ...prev,
+          [ruaField]: addr.logradouro!,
+          [bairroField]: addr.bairro || "",
+          [cidadeField]: addr.localidade || "",
+          [estadoField]: addr.uf || "",
+        }));
         toast({ title: "Endereço encontrado", description: addr.logradouro });
       }
     }
@@ -113,11 +130,13 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
       `*Origem:*`,
       `Rua: ${form.origemRua}, ${form.origemNumero}${form.origemComplemento ? ` - ${form.origemComplemento}` : ""}`,
       form.origemBairro ? `Bairro: ${form.origemBairro}` : "",
+      form.origemCidade ? `Cidade: ${form.origemCidade}${form.origemEstado ? ` - ${form.origemEstado}` : ""}` : "",
       `CEP: ${form.origemCep}`,
       ``,
       `*Destino:*`,
       `Rua: ${form.destinoRua}, ${form.destinoNumero}${form.destinoComplemento ? ` - ${form.destinoComplemento}` : ""}`,
       form.destinoBairro ? `Bairro: ${form.destinoBairro}` : "",
+      form.destinoCidade ? `Cidade: ${form.destinoCidade}${form.destinoEstado ? ` - ${form.destinoEstado}` : ""}` : "",
       `CEP: ${form.destinoCep}`,
       form.referencia ? `\n*Referência:* ${form.referencia}` : "",
       ``,
@@ -142,7 +161,7 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
       return; // Don't close dialog yet
     }
 
-    setForm({ nome: "", origemRua: "", origemNumero: "", origemComplemento: "", origemCep: "", origemBairro: "", destinoRua: "", destinoNumero: "", destinoComplemento: "", destinoCep: "", destinoBairro: "", referencia: "", diaViagem: "", horarioChegada: "" });
+    setForm({ nome: "", origemRua: "", origemNumero: "", origemComplemento: "", origemCep: "", origemBairro: "", origemCidade: "", origemEstado: "", destinoRua: "", destinoNumero: "", destinoComplemento: "", destinoCep: "", destinoBairro: "", destinoCidade: "", destinoEstado: "", referencia: "", diaViagem: "", horarioChegada: "" });
     onOpenChange(false);
   };
 
@@ -173,11 +192,21 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="quote_origem_cep" className="text-foreground text-sm font-medium">CEP * <span className="text-xs text-muted-foreground font-normal">(preenche automaticamente)</span></Label>
-                <Input id="quote_origem_cep" className={`${inputClass} border-primary/50 ring-1 ring-primary/20`} value={form.origemCep} onChange={(e) => handleCepChange("origemCep", "origemRua", "origemBairro", e.target.value)} maxLength={9} placeholder="Digite o CEP" inputMode="numeric" name="quote_origem_cep" autoComplete="shipping postal-code" />
+                <Input id="quote_origem_cep" className={`${inputClass} border-primary/50 ring-1 ring-primary/20`} value={form.origemCep} onChange={(e) => handleCepChange("origemCep", "origemRua", "origemBairro", "origemCidade", "origemEstado", e.target.value)} maxLength={9} placeholder="Digite o CEP" inputMode="numeric" name="quote_origem_cep" autoComplete="shipping postal-code" />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="quote_origem_bairro" className="text-foreground text-sm">Bairro</Label>
                 <Input id="quote_origem_bairro" className={inputClass} value={form.origemBairro} onChange={(e) => update("origemBairro", e.target.value)} maxLength={60} placeholder="Bairro" name="quote_origem_bairro" autoComplete="shipping address-level2" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="quote_origem_cidade" className="text-foreground text-sm">Cidade</Label>
+                <Input id="quote_origem_cidade" className={inputClass} value={form.origemCidade} onChange={(e) => update("origemCidade", e.target.value)} maxLength={60} placeholder="Cidade" name="quote_origem_cidade" autoComplete="shipping address-level2" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="quote_origem_estado" className="text-foreground text-sm">Estado</Label>
+                <Input id="quote_origem_estado" className={inputClass} value={form.origemEstado} onChange={(e) => update("origemEstado", e.target.value)} maxLength={2} placeholder="UF" name="quote_origem_estado" autoComplete="shipping address-level1" />
               </div>
             </div>
             <div className="space-y-1.5">
@@ -202,11 +231,21 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="dest_search_cep" className="text-foreground text-sm font-medium">CEP * <span className="text-xs text-muted-foreground font-normal">(preenche automaticamente)</span></Label>
-                <Input id="dest_search_cep" className={`${inputClass} border-primary/50 ring-1 ring-primary/20`} value={form.destinoCep} onChange={(e) => handleCepChange("destinoCep", "destinoRua", "destinoBairro", e.target.value)} maxLength={9} placeholder="Digite o CEP" inputMode="numeric" name="dest_search_cep" autoComplete="off" />
+                <Input id="dest_search_cep" className={`${inputClass} border-primary/50 ring-1 ring-primary/20`} value={form.destinoCep} onChange={(e) => handleCepChange("destinoCep", "destinoRua", "destinoBairro", "destinoCidade", "destinoEstado", e.target.value)} maxLength={9} placeholder="Digite o CEP" inputMode="numeric" name="dest_search_cep" autoComplete="off" />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="dest_search_bairro" className="text-foreground text-sm">Bairro</Label>
                 <Input id="dest_search_bairro" className={inputClass} value={form.destinoBairro} onChange={(e) => update("destinoBairro", e.target.value)} maxLength={60} placeholder="Bairro" name="dest_search_bairro" autoComplete="off" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="dest_search_cidade" className="text-foreground text-sm">Cidade</Label>
+                <Input id="dest_search_cidade" className={inputClass} value={form.destinoCidade} onChange={(e) => update("destinoCidade", e.target.value)} maxLength={60} placeholder="Cidade" name="dest_search_cidade" autoComplete="off" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="dest_search_estado" className="text-foreground text-sm">Estado</Label>
+                <Input id="dest_search_estado" className={inputClass} value={form.destinoEstado} onChange={(e) => update("destinoEstado", e.target.value)} maxLength={2} placeholder="UF" name="dest_search_estado" autoComplete="off" />
               </div>
             </div>
             <div className="space-y-1.5">
