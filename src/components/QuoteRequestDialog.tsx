@@ -50,7 +50,27 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
       return;
     }
 
-    toast({ title: "Solicitação enviada!", description: "Entraremos em contato em breve." });
+    const msg = [
+      `*Solicitação de Orçamento*`,
+      ``,
+      `*Nome:* ${form.nome}`,
+      ``,
+      `*Origem:*`,
+      `Rua: ${form.origemRua}, ${form.origemNumero}${form.origemComplemento ? ` - ${form.origemComplemento}` : ""}`,
+      `CEP: ${form.origemCep}`,
+      ``,
+      `*Destino:*`,
+      `Rua: ${form.destinoRua}, ${form.destinoNumero}${form.destinoComplemento ? ` - ${form.destinoComplemento}` : ""}`,
+      `CEP: ${form.destinoCep}`,
+      form.referencia ? `\n*Referência:* ${form.referencia}` : "",
+      ``,
+      `*Horário desejado:* ${form.horario}`,
+    ].filter(Boolean).join("\n");
+
+    const phone = "5511983544301";
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
+
     setForm({ nome: "", origemRua: "", origemNumero: "", origemComplemento: "", origemCep: "", destinoRua: "", destinoNumero: "", destinoComplemento: "", destinoCep: "", referencia: "", horario: "" });
     onOpenChange(false);
   };
