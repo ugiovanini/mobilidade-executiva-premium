@@ -127,26 +127,26 @@ const QuoteRequestDialog = ({ open, onOpenChange }: QuoteRequestDialogProps) => 
             </div>
           </fieldset>
 
-          {/* Destino = billing */}
+          {/* Destino – Safari: "search" in name prevents autofill heuristic */}
           <fieldset className="space-y-3">
             <legend className="text-primary text-xs tracking-[0.2em] uppercase font-semibold">Endereço de Destino/Chegada</legend>
             <div className="space-y-1.5">
-              <Label htmlFor="quote_destino_rua" className="text-foreground text-sm">Rua *</Label>
-              <Input id="quote_destino_rua" className={inputClass} value={form.destinoRua} onChange={(e) => update("destinoRua", e.target.value)} maxLength={60} placeholder="Nome da rua de destino/chegada" name="dest_street_xz" autoComplete="nope-street" />
+              <Label htmlFor="dest_search_rua" className="text-foreground text-sm">Rua *</Label>
+              <Input id="dest_search_rua" className={inputClass} value={form.destinoRua} onChange={(e) => update("destinoRua", e.target.value)} maxLength={60} placeholder="Informe o local de chegada" name="dest_search_rua" autoComplete="off" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="quote_destino_numero" className="text-foreground text-sm">Número *</Label>
-                <Input id="quote_destino_numero" className={inputClass} value={form.destinoNumero} onChange={(e) => update("destinoNumero", e.target.value.replace(/\D/g, "").slice(0, 6))} maxLength={6} placeholder="Nº" inputMode="numeric" name="dest_num_xz" autoComplete="nope-num" />
+                <Label htmlFor="dest_search_num" className="text-foreground text-sm">Número *</Label>
+                <Input id="dest_search_num" className={inputClass} value={form.destinoNumero} onChange={(e) => update("destinoNumero", e.target.value.replace(/\D/g, "").slice(0, 6))} maxLength={6} placeholder="Nº" inputMode="numeric" name="dest_search_num" autoComplete="off" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="quote_destino_complemento" className="text-foreground text-sm">Complemento</Label>
-                <Input id="quote_destino_complemento" className={inputClass} value={form.destinoComplemento} onChange={(e) => update("destinoComplemento", e.target.value)} maxLength={20} placeholder="Apto, sala..." name="dest_comp_xz" autoComplete="nope-comp" />
+                <Label htmlFor="dest_search_comp" className="text-foreground text-sm">Complemento</Label>
+                <Input id="dest_search_comp" className={inputClass} value={form.destinoComplemento} onChange={(e) => update("destinoComplemento", e.target.value)} maxLength={20} placeholder="Apto, sala..." name="dest_search_comp" autoComplete="off" />
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="quote_destino_cep" className="text-foreground text-sm">CEP *</Label>
-              <Input id="quote_destino_cep" className={inputClass} value={form.destinoCep} onChange={(e) => update("destinoCep", formatCep(e.target.value))} maxLength={9} placeholder="99999-999" inputMode="numeric" name="dest_cep_xz" autoComplete="nope-cep" />
+              <Label htmlFor="dest_search_cep" className="text-foreground text-sm">CEP *</Label>
+              <Input id="dest_search_cep" className={inputClass} value={form.destinoCep} onChange={(e) => update("destinoCep", formatCep(e.target.value))} maxLength={9} placeholder="99999-999" inputMode="numeric" name="dest_search_cep" autoComplete="off" />
             </div>
           </fieldset>
 
